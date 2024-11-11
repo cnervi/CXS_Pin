@@ -89,6 +89,10 @@ void Pin::off(void) {
   setPercent(0);
 }
 
+void Pin::toggle(void) {
+  (isOn()) ? off() : on();
+}
+
 bool Pin::isOn(void) {
   return (getValue() != 0);
 }

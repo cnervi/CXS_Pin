@@ -55,6 +55,7 @@ public:
 
   void on          (void);          // set Value to: PWM/ANALOG: 255, DIGITAL: 1
   void off         (void);          // set Value to: 0
+  void toggle      (void);          // set toggle Value on and off
 
   bool isOn        (void);          // True if Value != 0
   bool isOff       (void);          // True if Value == 0
