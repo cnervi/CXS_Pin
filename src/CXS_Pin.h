@@ -9,68 +9,67 @@
 #define ANALOG  0x0
 #define DIGITAL 0x1
 
+#define MVAL(type,mode) ((type == ANALOG) ? (mode == OUTPUT) ? 1023 : 255 : 1)
+
 typedef unsigned int  uint;
 typedef unsigned long ulong;
 
-#ifdef DEBUG
-typedef unsigned char byte;
-#endif
+
+namespace CXS
+{
+  class Pin
+  {
+    public:
+      Pin               (byte pin); 
+
+      Pin               (byte pin, 
+                         byte mode, 
+                         byte type);
+
+      Pin begin         (byte mode,
+                         byte type); 
+      Pin analog        (byte mode); 
+      Pin digital       (byte mode); 
+      Pin reversed      (void);
 
 
-namespace CXS {
-class Pin {
-public:
+      byte getPin       (void);          // get Pin number
+      bool isReversed   (void);          // True if reversed
+    
+      byte getMode      (void);          // get/set Mode
+      void setMode      (byte mode);     // OUTPUT/INPUT/INPUT_PULLUP
 
-  Pin (byte pin, 
-       bool reversed = false);
-
-  Pin (byte pin, 
-       byte mode, 
-       byte type, 
-       bool reversed = false);
-
-  void begin   (byte mode,
-                byte type, 
-                bool reversed = false);
-  void analog  (byte mode, 
-                bool reversed = false);
-  void digital (byte mode, 
-                bool reversed = false);
+      byte getType      (void);          // get/set Type:
+      void setType      (byte type);     // PWM/ANALOG/DIGITAL
 
 
-  byte getMode     (void);          // get/set Mode
-  void setMode     (byte mode);     // OUTPUT/INPUT/INPUT_PULLUP
+      int  getValue     (void);          // get/set Value:
+      void setValue     (int value);     // PWM:0-255, ANALOG:0-1023, DIGITAL:0-1
 
-  byte getType     (void);          // get/set Type:
-  void setType     (byte type);     // PWM/ANALOG/DIGITAL
+      int  getPercent   (void);          // get/set Value as a percentage:
+      void setPercent   (int percent);   // PWM/ANALOG: 0-100 DIGITAL: 0 or 100
 
-  bool getReversed (void);          // get/set Reversed:
-  void setReversed (bool reversed);	// true/false
+      void on           (void);          // set Value to: PWM/ANALOG: 255, DIGITAL: 1
+      void off          (void);          // set Value to: 0
+      void toggle       (void);          // set toggle Value on and off
 
-  int  getValue    (void);          // get/set Value:
-  void setValue    (int value);     // PWM:0-255, ANALOG:0-1023, DIGITAL:0-1
+      bool isOn         (void);          // True if Value != 0
+      bool isOff        (void);          // True if Value == 0
+      
+      int  read         (void);          // analogRed || digitalRead
+      void write        (int value);     // analogWrite || digitalWrite
 
-  int  getPercent  (void);          // get/set Value as a percentage:
-  void setPercent  (int percent);   // PWM/ANALOG: 0-100 DIGITAL: 0 or 100
+      int  analogRead   (void);
+      void analogWrite  (int value);
 
-  void on          (void);          // set Value to: PWM/ANALOG: 255, DIGITAL: 1
-  void off         (void);          // set Value to: 0
-  void toggle      (void);          // set toggle Value on and off
+      int  digitalRead  (void);
+      void digitalWrite (int value);
 
-  bool isOn        (void);          // True if Value != 0
-  bool isOff       (void);          // True if Value == 0
-  
-  int  read        (void);          // same as getValue()
-  void write       (int value);     // same as setValue()
-
-private:
-  int  maxValue (void);
-
-  byte pin      = NONE;
-  byte mode     = NONE;
-  byte type     = NONE;
-  bool reversed = false;
-};
+    private:
+      byte pin     = NONE;
+      byte mode    = NONE;
+      byte type    = NONE;
+      bool reverse = false;
+  };
 }
-
 #endif//CXS_PIN_H
