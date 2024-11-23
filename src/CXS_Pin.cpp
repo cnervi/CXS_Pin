@@ -24,6 +24,18 @@ namespace CXS
     return begin(mode, DIGITAL);
   }
 
+  Pin Pin::output(byte type) {
+    return begin(OUTPUT, type);
+  }
+
+  Pin Pin::input(byte type) {
+    return begin(INPUT, type);
+  }
+
+  Pin Pin::inputPullup(byte type) {
+    return begin(INPUT_PULLUP, type);
+  }
+
   Pin Pin::reversed(void) {
     reverse = true;
     return *this;
@@ -43,7 +55,7 @@ namespace CXS
 
   void Pin::setMode(byte mode) {
     this->mode = mode;
-    ::pinMode(pin, mode);
+    pinMode(mode);
   }
 
   byte Pin::getType(void) {
@@ -100,6 +112,15 @@ namespace CXS
     (ANALOG) ? analogWrite(value) : digitalWrite(value);
   }
 
+  void Pin::beep(uint freq) {
+    (freq == NONE) ? noTone() : tone(freq, 0);
+  }
+
+
+  void Pin::pinMode(byte mode) {
+    ::pinMode(pin, mode);
+  }
+
   int Pin::analogRead(void) {
     return ::analogRead(pin);
   }
@@ -115,4 +136,28 @@ namespace CXS
   void Pin::digitalWrite(int value) {
     ::digitalWrite(pin, value);
   }
-}
+
+  ulong Pin::pulseIn(byte  state, ulong tout) {
+   return ::pulseIn(pin, state, tout);
+  }
+
+  ulong Pin::pulseInLong (byte  state, ulong tout) {
+   return ::pulseInLong(pin, state, tout);
+  }
+
+  byte Pin::shiftIn(Pin  clock, byte order) {
+    return ::shiftIn(pin, clock.getPin(), order);
+  }
+
+  void Pin::shiftOut(Pin  clock, byte order, byte value) {
+   ::shiftOut(pin, clock.getPin(), order, value);
+  }
+
+  void Pin::noTone(void) {
+    ::noTone(pin);
+  }
+
+  void Pin::tone(uint freq, ulong time) {
+    ::tone(pin, freq, time); 
+  }
+
